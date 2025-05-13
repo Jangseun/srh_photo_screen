@@ -93,3 +93,11 @@ def some_endpoint(request):
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Photo
+
+# 그리고 Django에서 /api/get-csrf/ 라우트를 만들어서 CSRF 쿠키를 강제로 설정
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
+
+@ensure_csrf_cookie
+def get_csrf(request):
+    return JsonResponse({'message': 'CSRF cookie set'})

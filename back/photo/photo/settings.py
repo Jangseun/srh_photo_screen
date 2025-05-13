@@ -209,3 +209,4 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
+CORS_ALLOW_CREDENTIALS = True  # 쿠키를 포함하여 요청을 보내도록 설정

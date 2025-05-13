@@ -7,7 +7,7 @@ const frameLayouts = {
     { width: 512, height: 712, top: 128, left: 78 },
     { width: 512, height: 712, top: 128, left: 610 },
     { width: 512, height: 712, top: 845, left: 78 },
-    { width: 512, height: 712, top: 845, left: 610 },
+    { width: 512, height: 712, top: 845, left: 610 }, 
   ],
   light_frame: [
     { width: 512, height: 712, top: 128, left: 78 },
@@ -49,6 +49,18 @@ const PhotoFrameTest = ({ photos, frameType, onBack, title = "인생네컷" }) =
   // 인쇄 상태 추적을 위한 ref
   const hasPrintedRef = useRef(false);
 
+  // CSRF토큰 관련
+  function getCSRFToken() {
+    const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
+    return cookie ? cookie.split('=')[1] : null;
+  }
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/get-csrf/', {
+      credentials: 'include',
+    });
+  }, []);
+
   // 이미지를 서버에 업로드하고 QR 코드 URL 받기
   const uploadImageToServer = async (imageUrl) => {
     try {
@@ -88,7 +100,8 @@ const PhotoFrameTest = ({ photos, frameType, onBack, title = "인생네컷" }) =
         credentials: 'include',
         mode: 'cors',
         headers: {
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': getCSRFToken(),  // ✅ CSRF 토큰 추가
         },
       });
   
@@ -400,6 +413,7 @@ const PhotoFrameTest = ({ photos, frameType, onBack, title = "인생네컷" }) =
       });
     }
   }, []);
+
 
   return (
     <div className="result-container">
